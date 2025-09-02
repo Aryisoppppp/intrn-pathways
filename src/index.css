@@ -2,41 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* INTRN Design System - Purple gradient theme with modern glassmorphism
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Background & Base Colors */
+    --background: 248 25% 8%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card & Surface Colors */
+    --card: 258 100% 12%;
+    --card-foreground: 0 0% 98%;
+    --card-glass: 258 100% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Popover Colors */
+    --popover: 258 100% 10%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary Purple Theme */
+    --primary: 263 85% 60%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 263 85% 55%;
+    --primary-light: 263 85% 70%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary Colors */
+    --secondary: 258 30% 20%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted Colors */
+    --muted: 258 15% 15%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent Colors */
+    --accent: 280 100% 50%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Borders & Inputs */
+    --border: 258 30% 25%;
+    --input: 258 30% 18%;
+    --ring: 263 85% 60%;
 
-    --radius: 0.5rem;
+    /* Design System Tokens */
+    --radius: 1rem;
+    
+    /* Purple Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(263 85% 60%) 0%, hsl(280 100% 50%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(258 100% 12%) 0%, hsl(258 100% 20%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(263 85% 60%) 0%, hsl(280 100% 50%) 30%, hsl(290 100% 45%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsla(258 100% 15% / 0.8) 0%, hsla(258 100% 25% / 0.6) 100%);
+    
+    /* Shadows & Effects */
+    --shadow-purple: 0 25px 50px -12px hsl(263 85% 60% / 0.3);
+    --shadow-glow: 0 0 40px hsl(263 85% 60% / 0.4);
+    --shadow-card: 0 10px 30px -10px hsl(258 100% 5% / 0.8);
+    
+    /* Animation & Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +128,71 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
+    background: var(--gradient-secondary);
+    min-height: 100vh;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Glass Card Effect */
+  .glass-card {
+    background: var(--gradient-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-purple);
+  }
+
+  /* Purple Button Glow Effect */
+  .btn-glow {
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-glow);
+    transition: var(--transition-smooth);
+  }
+
+  .btn-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-purple);
+  }
+
+  /* Hero Text Gradient */
+  .text-gradient {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Animated Background */
+  .animated-bg {
+    background: var(--gradient-secondary);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Floating Animation */
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
   }
 }
