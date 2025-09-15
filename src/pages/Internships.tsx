@@ -125,50 +125,59 @@ const Internships = () => {
             </p>
           </div>
 
-          {/* Filters */}
-          <div className="glass-card p-6 rounded-xl mb-8">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search internships or companies..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-background/50"
-                />
+          {/* Search Bar */}
+          <div className="glass-card p-6 rounded-xl mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search internships, companies, or skills..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-background/50 text-lg h-12"
+              />
+            </div>
+          </div>
+
+          {/* Filter Chips */}
+          <div className="mb-8">
+            <div className="flex flex-wrap gap-3 mb-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium text-muted-foreground">Location:</span>
+                <div className="flex flex-wrap gap-2">
+                  {['All', 'Remote', 'San Francisco', 'New York', 'Los Angeles', 'Stockholm'].map((location) => (
+                    <Button
+                      key={location}
+                      variant={locationFilter === (location === 'All' ? 'all' : location) ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setLocationFilter(location === 'All' ? 'all' : location)}
+                      className="h-8 px-3 text-xs"
+                    >
+                      {location}
+                    </Button>
+                  ))}
+                </div>
               </div>
-              
-              <Select value={locationFilter} onValueChange={setLocationFilter}>
-                <SelectTrigger className="w-full lg:w-48 bg-background/50">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Locations</SelectItem>
-                  <SelectItem value="Remote">Remote</SelectItem>
-                  <SelectItem value="San Francisco">San Francisco</SelectItem>
-                  <SelectItem value="New York">New York</SelectItem>
-                  <SelectItem value="Los Angeles">Los Angeles</SelectItem>
-                  <SelectItem value="Stockholm">Stockholm</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-full lg:w-48 bg-background/50">
-                  <Briefcase className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="Paid">Paid</SelectItem>
-                  <SelectItem value="Unpaid">Unpaid</SelectItem>
-                  <SelectItem value="Academic Credit">Academic Credit</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Button variant="outline" size="icon" className="bg-background/50">
-                <Filter className="h-4 w-4" />
-              </Button>
+            </div>
+            
+            <div className="flex flex-wrap gap-3">
+              <div className="flex items-center gap-2">
+                <Briefcase className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium text-muted-foreground">Type:</span>
+                <div className="flex flex-wrap gap-2">
+                  {['All', 'Paid', 'Unpaid', 'Academic Credit'].map((type) => (
+                    <Button
+                      key={type}
+                      variant={typeFilter === (type === 'All' ? 'all' : type) ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setTypeFilter(type === 'All' ? 'all' : type)}
+                      className="h-8 px-3 text-xs"
+                    >
+                      {type}
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -194,7 +203,7 @@ const Internships = () => {
 
           {/* Internship Grid */}
           {filteredInternships.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {filteredInternships.map((internship) => (
                 <InternshipCard
                   key={internship.id}
