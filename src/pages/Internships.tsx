@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter, MapPin, Briefcase } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Search, Filter, MapPin, Briefcase, Calendar, Clock, DollarSign, Users, BookOpen } from 'lucide-react';
 import PageLayout from '@/components/Layout/PageLayout';
 import InternshipCard from '@/components/Cards/InternshipCard';
 import { useToast } from '@/hooks/use-toast';
@@ -18,7 +20,12 @@ const mockInternships = [
     duration: '3 months',
     type: 'Paid',
     description: 'Join our platform engineering team to work on large-scale distributed systems that serve billions of users worldwide. You\'ll collaborate with senior engineers on critical infrastructure projects.',
-    skills: ['JavaScript', 'React', 'Python', 'GCP']
+    skills: ['JavaScript', 'React', 'Python', 'GCP'],
+    requirements: 'Currently pursuing Computer Science degree, 3.0+ GPA, experience with web technologies',
+    responsibilities: 'Develop scalable backend services, optimize video streaming infrastructure, collaborate on API design',
+    benefits: 'Health insurance, free meals, gym membership, $8000/month stipend',
+    applicationDeadline: '2024-03-15',
+    startDate: '2024-06-01'
   },
   {
     id: '2',
@@ -29,7 +36,12 @@ const mockInternships = [
     duration: '4 months',
     type: 'Paid',
     description: 'Work alongside our design team to create user experiences that connect billions of people. Focus on mobile and web interfaces for core Facebook products.',
-    skills: ['Figma', 'Prototyping', 'User Research', 'Design Systems']
+    skills: ['Figma', 'Prototyping', 'User Research', 'Design Systems'],
+    requirements: 'Design portfolio, experience with design tools, user-centered design principles',
+    responsibilities: 'Create wireframes and prototypes, conduct user research, collaborate with product teams',
+    benefits: 'Housing stipend, transportation, mentorship program, $7500/month',
+    applicationDeadline: '2024-02-28',
+    startDate: '2024-05-15'
   },
   {
     id: '3',
@@ -40,7 +52,12 @@ const mockInternships = [
     duration: '3 months',
     type: 'Paid',
     description: 'Analyze user behavior data to improve recommendation algorithms and drive product decisions. Work with machine learning models and large datasets.',
-    skills: ['Python', 'SQL', 'Machine Learning', 'Statistics']
+    skills: ['Python', 'SQL', 'Machine Learning', 'Statistics'],
+    requirements: 'Statistics or Computer Science background, Python proficiency, SQL experience',
+    responsibilities: 'Build predictive models, analyze user engagement metrics, present insights to stakeholders',
+    benefits: 'Professional development budget, networking events, $8500/month',
+    applicationDeadline: '2024-03-01',
+    startDate: '2024-06-15'
   },
   {
     id: '4',
@@ -51,7 +68,12 @@ const mockInternships = [
     duration: '3 months',
     type: 'Paid',
     description: 'Develop features for the Instagram mobile app used by over 2 billion people. Work on iOS and Android platforms with cutting-edge technologies.',
-    skills: ['Swift', 'Kotlin', 'React Native', 'Mobile UI']
+    skills: ['Swift', 'Kotlin', 'React Native', 'Mobile UI'],
+    requirements: 'Mobile development experience, iOS or Android knowledge, CS degree in progress',
+    responsibilities: 'Implement new features, optimize app performance, participate in code reviews',
+    benefits: 'Device allowance, commuter benefits, career coaching, $8000/month',
+    applicationDeadline: '2024-03-10',
+    startDate: '2024-06-01'
   },
   {
     id: '5',
@@ -62,7 +84,12 @@ const mockInternships = [
     duration: '4 months',
     type: 'Paid',
     description: 'Support the content acquisition and strategy team in analyzing viewing trends and market opportunities for original and licensed content.',
-    skills: ['Data Analysis', 'Market Research', 'Excel', 'Presentation']
+    skills: ['Data Analysis', 'Market Research', 'Excel', 'Presentation'],
+    requirements: 'Business or Media Studies background, analytical skills, presentation experience',
+    responsibilities: 'Research content trends, prepare executive briefings, support acquisition decisions',
+    benefits: 'Industry networking, exclusive screenings, mentorship, $6500/month',
+    applicationDeadline: '2024-02-20',
+    startDate: '2024-05-20'
   },
   {
     id: '6',
@@ -73,7 +100,108 @@ const mockInternships = [
     duration: '6 months',
     type: 'Paid',
     description: 'Work on audio processing algorithms and music recommendation systems. Contribute to the technology that powers music discovery for millions of users.',
-    skills: ['Audio Processing', 'Python', 'Machine Learning', 'DSP']
+    skills: ['Audio Processing', 'Python', 'Machine Learning', 'DSP'],
+    requirements: 'Audio engineering or CS background, signal processing knowledge, Python skills',
+    responsibilities: 'Develop audio algorithms, improve recommendation systems, research new technologies',
+    benefits: 'Relocation assistance, language lessons, cultural immersion, €4500/month',
+    applicationDeadline: '2024-03-05',
+    startDate: '2024-06-10'
+  },
+  {
+    id: '7',
+    company: 'Apple',
+    logo: 'AP',
+    role: 'iOS Developer Intern',
+    location: 'Cupertino, CA',
+    duration: '3 months',
+    type: 'Paid',
+    description: 'Join the iOS team to work on next-generation mobile experiences. Contribute to apps used by millions of users worldwide.',
+    skills: ['Swift', 'UIKit', 'SwiftUI', 'Xcode'],
+    requirements: 'iOS development experience, Swift proficiency, published apps preferred',
+    responsibilities: 'Develop iOS applications, implement new features, optimize user interfaces',
+    benefits: 'Employee discounts, wellness programs, career development, $9000/month',
+    applicationDeadline: '2024-03-20',
+    startDate: '2024-06-05'
+  },
+  {
+    id: '8',
+    company: 'Google',
+    logo: 'GG',
+    role: 'Cloud Infrastructure Intern',
+    location: 'Mountain View, CA',
+    duration: '4 months',
+    type: 'Paid',
+    description: 'Work with Google Cloud Platform team on large-scale infrastructure projects. Help build the future of cloud computing.',
+    skills: ['Kubernetes', 'Docker', 'Go', 'Cloud Architecture'],
+    requirements: 'Distributed systems knowledge, container experience, cloud platform familiarity',
+    responsibilities: 'Design cloud solutions, improve infrastructure reliability, contribute to open source',
+    benefits: 'Free meals, shuttle service, learning stipend, $9500/month',
+    applicationDeadline: '2024-03-12',
+    startDate: '2024-06-03'
+  },
+  {
+    id: '9',
+    company: 'Microsoft',
+    logo: 'MS',
+    role: 'AI Research Intern',
+    location: 'Redmond, WA',
+    duration: '3 months',
+    type: 'Paid',
+    description: 'Join our AI research team to work on cutting-edge machine learning projects. Contribute to research that shapes the future of AI.',
+    skills: ['PyTorch', 'TensorFlow', 'NLP', 'Computer Vision'],
+    requirements: 'ML research experience, PhD student preferred, published papers a plus',
+    responsibilities: 'Conduct AI research, publish findings, collaborate with research teams',
+    benefits: 'Research publication support, conference attendance, $8800/month',
+    applicationDeadline: '2024-02-25',
+    startDate: '2024-05-25'
+  },
+  {
+    id: '10',
+    company: 'Tesla',
+    logo: 'TS',
+    role: 'Autonomous Driving Intern',
+    location: 'Palo Alto, CA',
+    duration: '4 months',
+    type: 'Paid',
+    description: 'Work on self-driving car technology and contribute to the future of transportation. Join our autopilot team.',
+    skills: ['Computer Vision', 'Deep Learning', 'C++', 'ROS'],
+    requirements: 'Robotics or ML background, computer vision experience, C++ proficiency',
+    responsibilities: 'Develop perception algorithms, improve autonomous navigation, test vehicle systems',
+    benefits: 'Stock options, vehicle discounts, innovation culture, $8500/month',
+    applicationDeadline: '2024-03-08',
+    startDate: '2024-06-12'
+  },
+  {
+    id: '11',
+    company: 'Airbnb',
+    logo: 'AB',
+    role: 'Full Stack Intern',
+    location: 'San Francisco, CA',
+    duration: '3 months',
+    type: 'Paid',
+    description: 'Build features that help millions of travelers find their perfect stays. Work across our entire technology stack.',
+    skills: ['React', 'Node.js', 'GraphQL', 'PostgreSQL'],
+    requirements: 'Full stack development experience, React knowledge, database familiarity',
+    responsibilities: 'Develop web applications, build APIs, improve user experience',
+    benefits: 'Travel credits, team retreats, flexible work, $7800/month',
+    applicationDeadline: '2024-03-18',
+    startDate: '2024-06-08'
+  },
+  {
+    id: '12',
+    company: 'Stripe',
+    logo: 'ST',
+    role: 'Fintech Engineer Intern',
+    location: 'Remote',
+    duration: '3 months',
+    type: 'Paid',
+    description: 'Help build the financial infrastructure for the internet. Work on payment systems used by millions of businesses.',
+    skills: ['Ruby', 'Go', 'API Design', 'Payments'],
+    requirements: 'Backend development experience, API knowledge, financial systems interest',
+    responsibilities: 'Build payment features, improve API reliability, enhance security systems',
+    benefits: 'Home office setup, learning budget, mentorship, $8200/month',
+    applicationDeadline: '2024-03-22',
+    startDate: '2024-06-01'
   }
 ];
 
@@ -82,6 +210,7 @@ const Internships = () => {
   const [locationFilter, setLocationFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [interestedInternships, setInterestedInternships] = useState<Set<string>>(new Set());
+  const [selectedInternship, setSelectedInternship] = useState<typeof mockInternships[0] | null>(null);
   const { toast } = useToast();
 
   const handleInterestClick = (id: string, interested: boolean) => {
@@ -145,7 +274,7 @@ const Internships = () => {
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm font-medium text-muted-foreground">Location:</span>
                 <div className="flex flex-wrap gap-2">
-                  {['All', 'Remote', 'San Francisco', 'New York', 'Los Angeles', 'Stockholm'].map((location) => (
+                  {['All', 'Remote', 'San Francisco', 'New York', 'Los Angeles', 'Stockholm', 'Cupertino', 'Mountain View', 'Redmond', 'Palo Alto', 'Menlo Park'].map((location) => (
                     <Button
                       key={location}
                       variant={locationFilter === (location === 'All' ? 'all' : location) ? "default" : "outline"}
@@ -205,12 +334,13 @@ const Internships = () => {
           {filteredInternships.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {filteredInternships.map((internship) => (
-                <InternshipCard
-                  key={internship.id}
-                  {...internship}
-                  isInterested={interestedInternships.has(internship.id)}
-                  onInterestClick={handleInterestClick}
-                />
+                <div key={internship.id} onClick={() => setSelectedInternship(internship)} className="cursor-pointer">
+                  <InternshipCard
+                    {...internship}
+                    isInterested={interestedInternships.has(internship.id)}
+                    onInterestClick={handleInterestClick}
+                  />
+                </div>
               ))}
             </div>
           ) : (
@@ -234,6 +364,133 @@ const Internships = () => {
               </Button>
             </div>
           )}
+
+          {/* Internship Detail Modal */}
+          <Dialog open={!!selectedInternship} onOpenChange={() => setSelectedInternship(null)}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              {selectedInternship && (
+                <>
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg">
+                        {selectedInternship.logo}
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold">{selectedInternship.role}</h2>
+                        <p className="text-lg text-muted-foreground">{selectedInternship.company}</p>
+                      </div>
+                    </DialogTitle>
+                  </DialogHeader>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {/* Left Column */}
+                    <div className="space-y-6">
+                      {/* Basic Info */}
+                      <div className="glass-card p-4 rounded-lg">
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
+                          Details
+                        </h3>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Location:</span>
+                            <span>{selectedInternship.location}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Duration:</span>
+                            <span>{selectedInternship.duration}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Type:</span>
+                            <Badge variant="secondary">{selectedInternship.type}</Badge>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Start Date:</span>
+                            <span>{selectedInternship.startDate}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Deadline:</span>
+                            <span className="text-red-600 font-medium">{selectedInternship.applicationDeadline}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Skills */}
+                      <div className="glass-card p-4 rounded-lg">
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <BookOpen className="h-4 w-4" />
+                          Required Skills
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedInternship.skills.map((skill, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Benefits */}
+                      <div className="glass-card p-4 rounded-lg">
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <DollarSign className="h-4 w-4" />
+                          Benefits & Compensation
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{selectedInternship.benefits}</p>
+                      </div>
+                    </div>
+
+                    {/* Right Column */}
+                    <div className="space-y-6">
+                      {/* Description */}
+                      <div className="glass-card p-4 rounded-lg">
+                        <h3 className="font-semibold mb-3">About This Role</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {selectedInternship.description}
+                        </p>
+                      </div>
+
+                      {/* Requirements */}
+                      <div className="glass-card p-4 rounded-lg">
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <Users className="h-4 w-4" />
+                          Requirements
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {selectedInternship.requirements}
+                        </p>
+                      </div>
+
+                      {/* Responsibilities */}
+                      <div className="glass-card p-4 rounded-lg">
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <Briefcase className="h-4 w-4" />
+                          Key Responsibilities
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {selectedInternship.responsibilities}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 mt-6 pt-6 border-t">
+                    <Button
+                      variant={interestedInternships.has(selectedInternship.id) ? "default" : "hero"}
+                      className="flex-1"
+                      onClick={() => handleInterestClick(selectedInternship.id, !interestedInternships.has(selectedInternship.id))}
+                    >
+                      {interestedInternships.has(selectedInternship.id) ? "✓ Interested" : "I'm Interested"}
+                    </Button>
+                    <Button variant="outline" className="flex-1">
+                      Apply Now
+                    </Button>
+                  </div>
+                </>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </PageLayout>
