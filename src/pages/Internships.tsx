@@ -105,8 +105,8 @@ const Internships = () => {
   const filteredInternships = mockInternships.filter(internship => {
     const matchesSearch = internship.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          internship.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = !locationFilter || internship.location.includes(locationFilter);
-    const matchesType = !typeFilter || internship.type === typeFilter;
+    const matchesLocation = !locationFilter || locationFilter === 'all' || internship.location.includes(locationFilter);
+    const matchesType = !typeFilter || typeFilter === 'all' || internship.type === typeFilter;
     
     return matchesSearch && matchesLocation && matchesType;
   });
@@ -144,7 +144,7 @@ const Internships = () => {
                   <SelectValue placeholder="Location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Locations</SelectItem>
+                  <SelectItem value="all">All Locations</SelectItem>
                   <SelectItem value="Remote">Remote</SelectItem>
                   <SelectItem value="San Francisco">San Francisco</SelectItem>
                   <SelectItem value="New York">New York</SelectItem>
@@ -159,7 +159,7 @@ const Internships = () => {
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
+                  <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="Paid">Paid</SelectItem>
                   <SelectItem value="Unpaid">Unpaid</SelectItem>
                   <SelectItem value="Academic Credit">Academic Credit</SelectItem>
@@ -217,8 +217,8 @@ const Internships = () => {
                 variant="outline" 
                 onClick={() => {
                   setSearchTerm('');
-                  setLocationFilter('');
-                  setTypeFilter('');
+                  setLocationFilter('all');
+                  setTypeFilter('all');
                 }}
               >
                 Clear Filters
