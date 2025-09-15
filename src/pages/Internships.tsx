@@ -112,7 +112,7 @@ const Internships = () => {
   });
 
   return (
-    <PageLayout isAuthenticated={true}>
+    <PageLayout>
       <div className="min-h-screen px-4 py-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

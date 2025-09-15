@@ -33,19 +33,20 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
+            <Link 
+              to="/internships" 
+              className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${
+                isActive('/internships') 
+                  ? 'text-primary bg-primary/10' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Briefcase className="h-4 w-4" />
+              <span>Internships</span>
+            </Link>
+            
             {isAuthenticated ? (
               <>
-                <Link 
-                  to="/internships" 
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${
-                    isActive('/internships') 
-                      ? 'text-primary bg-primary/10' 
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <Briefcase className="h-4 w-4" />
-                  <span>Internships</span>
-                </Link>
                 <Link 
                   to="/profile" 
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${
@@ -106,16 +107,17 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
         {isMobileMenuOpen && (
           <div className="md:hidden pb-4">
             <div className="space-y-2">
+              <Link 
+                to="/internships" 
+                className="flex items-center space-x-2 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Briefcase className="h-4 w-4" />
+                <span>Internships</span>
+              </Link>
+              
               {isAuthenticated ? (
                 <>
-                  <Link 
-                    to="/internships" 
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Briefcase className="h-4 w-4" />
-                    <span>Internships</span>
-                  </Link>
                   <Link 
                     to="/profile" 
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground"
