@@ -97,6 +97,7 @@ const SignUp = () => {
                       value={formData.firstName}
                       onChange={handleChange}
                       className="pl-10 bg-background/50 border-border"
+                      autoComplete="off"
                       required
                     />
                   </div>
@@ -113,6 +114,7 @@ const SignUp = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                     className="bg-background/50 border-border"
+                    autoComplete="off"
                     required
                   />
                 </div>
@@ -132,6 +134,7 @@ const SignUp = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className="pl-10 bg-background/50 border-border"
+                    autoComplete="off"
                     required
                   />
                 </div>
