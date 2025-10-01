@@ -35,15 +35,15 @@ const Home = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link to="/signup">
+            <Link to="/auth">
               <Button variant="hero" size="lg" className="text-lg px-8 py-4 h-auto">
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/login">
+            <Link to="/internships">
               <Button variant="glass" size="lg" className="text-lg px-8 py-4 h-auto">
-                Sign In
+                Browse Internships
               </Button>
             </Link>
           </div>
@@ -139,7 +139,7 @@ const Home = () => {
             <p className="text-xl text-muted-foreground mb-8">
               Join INTRN today and take the first step towards your dream career.
             </p>
-            <Link to="/signup">
+            <Link to="/auth">
               <Button variant="hero" size="lg" className="text-lg px-12 py-4 h-auto">
                 Sign Up Now
                 <ArrowRight className="ml-2 h-5 w-5" />

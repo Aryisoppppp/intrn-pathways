@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Briefcase, User, Settings, LogOut, Menu, X } from 'lucide-react';
+import { Briefcase, User, Settings, LogOut, Menu, X, FileText } from 'lucide-react';
 import intrLogo from '@/assets/intrn-logo.png';
+import NotificationBell from '@/components/NotificationBell';
 
 interface NavigationProps {
   isAuthenticated?: boolean;
@@ -48,6 +49,17 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
             {isAuthenticated ? (
               <>
                 <Link 
+                  to="/applications" 
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${
+                    isActive('/applications') 
+                      ? 'text-primary bg-primary/10' 
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>Applications</span>
+                </Link>
+                <Link 
                   to="/profile" 
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${
                     isActive('/profile') 
@@ -69,6 +81,7 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
                   <Settings className="h-4 w-4" />
                   <span>Settings</span>
                 </Link>
+                <NotificationBell />
                 <Button 
                   variant="outline" 
                   size="sm" 
@@ -118,6 +131,14 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
               
               {isAuthenticated ? (
                 <>
+                  <Link 
+                    to="/applications" 
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>Applications</span>
+                  </Link>
                   <Link 
                     to="/profile" 
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground"

@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      applications: {
+        Row: {
+          additional_notes: string | null
+          applied_at: string
+          company: string
+          cover_letter: string | null
+          id: string
+          internship_id: string
+          role: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          applied_at?: string
+          company: string
+          cover_letter?: string | null
+          id?: string
+          internship_id: string
+          role: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          additional_notes?: string | null
+          applied_at?: string
+          company?: string
+          cover_letter?: string | null
+          id?: string
+          internship_id?: string
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          link: string | null
+          message: string
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          message: string
+          read?: boolean
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          email: string
+          first_name: string | null
+          gpa: string | null
+          graduation_year: string | null
+          id: string
+          last_name: string | null
+          major: string | null
+          phone: string | null
+          resume_url: string | null
+          skills: string[] | null
+          university: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          email: string
+          first_name?: string | null
+          gpa?: string | null
+          graduation_year?: string | null
+          id: string
+          last_name?: string | null
+          major?: string | null
+          phone?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          university?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          gpa?: string | null
+          graduation_year?: string | null
+          id?: string
+          last_name?: string | null
+          major?: string | null
+          phone?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          university?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, MapPin, Briefcase, Calendar, Clock, DollarSign, Users, BookOpen } from 'lucide-react';
+import { Search, MapPin, Briefcase, Calendar, Clock, DollarSign, Users, BookOpen } from 'lucide-react';
 import PageLayout from '@/components/Layout/PageLayout';
 import InternshipCard from '@/components/Cards/InternshipCard';
+import ApplicationDialog from '@/components/ApplicationDialog';
 import { useToast } from '@/hooks/use-toast';
 
 // Mock data for internships
@@ -371,6 +372,7 @@ const Internships = () => {
   const [typeFilter, setTypeFilter] = useState('');
   const [interestedInternships, setInterestedInternships] = useState<Set<string>>(new Set());
   const [selectedInternship, setSelectedInternship] = useState<typeof mockInternships[0] | null>(null);
+  const [applicationDialogOpen, setApplicationDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const handleInterestClick = (id: string, interested: boolean) => {
@@ -643,7 +645,13 @@ const Internships = () => {
                     >
                       {interestedInternships.has(selectedInternship.id) ? "✓ Interested" : "I'm Interested"}
                     </Button>
-                    <Button variant="outline" className="flex-1">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => {
+                        setApplicationDialogOpen(true);
+                      }}
+                    >
                       Apply Now
                     </Button>
                   </div>
@@ -651,6 +659,21 @@ const Internships = () => {
               )}
             </DialogContent>
           </Dialog>
+
+          {/* Application Dialog */}
+          {selectedInternship && (
+            <ApplicationDialog
+              open={applicationDialogOpen}
+              onOpenChange={setApplicationDialogOpen}
+              internship={selectedInternship}
+              onSuccess={() => {
+                toast({
+                  title: "Success!",
+                  description: "Your application has been submitted",
+                });
+              }}
+            />
+          )}
         </div>
       </div>
     </PageLayout>
