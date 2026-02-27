@@ -4,61 +4,65 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { User, MapPin, Phone, Mail, Plus, X, Upload, GraduationCap } from 'lucide-react';
+import { Mail, Phone, GraduationCap, Plus, X, Upload, Loader2 } from 'lucide-react';
 import PageLayout from '@/components/Layout/PageLayout';
-import { useToast } from '@/hooks/use-toast';
+import { useProfile } from '@/hooks/useProfile';
 
 const Profile = () => {
+  const { profile, setProfile, loading, saving, saveProfile, userId } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@university.edu',
-    phone: '+1 (555) 123-4567',
-    location: 'San Francisco, CA',
-    university: 'Stanford University',
-    major: 'Computer Science',
-    graduationYear: '2025',
-    bio: 'Passionate computer science student with experience in full-stack development and machine learning. Looking for internship opportunities to apply my skills in real-world projects.',
-    skills: ['JavaScript', 'Python', 'React', 'Node.js', 'Machine Learning', 'SQL'],
-    newSkill: ''
-  });
-
-  const { toast } = useToast();
+  const [newSkill, setNewSkill] = useState('');
+  const [originalProfile, setOriginalProfile] = useState(profile);
 
   const handleInputChange = (field: string, value: string) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
+    setProfile(prev => ({ ...prev, [field]: value }));
   };
 
   const addSkill = () => {
-    if (profileData.newSkill.trim() && !profileData.skills.includes(profileData.newSkill.trim())) {
-      setProfileData(prev => ({
-        ...prev,
-        skills: [...prev.skills, prev.newSkill.trim()],
-        newSkill: ''
-      }));
+    if (newSkill.trim() && !profile.skills.includes(newSkill.trim())) {
+      setProfile(prev => ({ ...prev, skills: [...prev.skills, newSkill.trim()] }));
+      setNewSkill('');
     }
   };
 
   const removeSkill = (skillToRemove: string) => {
-    setProfileData(prev => ({
-      ...prev,
-      skills: prev.skills.filter(skill => skill !== skillToRemove)
-    }));
+    setProfile(prev => ({ ...prev, skills: prev.skills.filter(s => s !== skillToRemove) }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    toast({
-      title: "Profile updated!",
-      description: "Your profile has been saved successfully.",
-    });
+  const handleEdit = () => {
+    setOriginalProfile(profile);
+    setIsEditing(true);
   };
 
   const handleCancel = () => {
+    setProfile(originalProfile);
     setIsEditing(false);
-    // Reset form data here if needed
   };
+
+  const handleSave = async () => {
+    const success = await saveProfile(profile);
+    if (success) setIsEditing(false);
+  };
+
+  if (loading) {
+    return (
+      <PageLayout isAuthenticated={!!userId}>
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (!userId) {
+    return (
+      <PageLayout isAuthenticated={false}>
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-muted-foreground text-lg">Please sign in to view your profile.</p>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout isAuthenticated={true}>
@@ -77,17 +81,13 @@ const Profile = () => {
             <div className="flex items-center space-x-3">
               {isEditing ? (
                 <>
-                  <Button variant="outline" onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                  <Button variant="hero" onClick={handleSave}>
-                    Save Changes
+                  <Button variant="outline" onClick={handleCancel} disabled={saving}>Cancel</Button>
+                  <Button variant="hero" onClick={handleSave} disabled={saving}>
+                    {saving ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Saving...</> : 'Save Changes'}
                   </Button>
                 </>
               ) : (
-                <Button variant="hero" onClick={() => setIsEditing(true)}>
-                  Edit Profile
-                </Button>
+                <Button variant="hero" onClick={handleEdit}>Edit Profile</Button>
               )}
             </div>
           </div>
@@ -98,41 +98,35 @@ const Profile = () => {
               <div className="glass-card p-6 rounded-xl text-center">
                 <div className="relative inline-block mb-6">
                   <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-4xl font-bold">
-                    {profileData.firstName[0]}{profileData.lastName[0]}
+                    {(profile.firstName?.[0] || '?')}{(profile.lastName?.[0] || '')}
                   </div>
                   {isEditing && (
-                    <Button 
-                      size="icon" 
-                      variant="secondary" 
-                      className="absolute bottom-0 right-0 rounded-full"
-                    >
+                    <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full">
                       <Upload className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
-                
                 <h2 className="text-2xl font-bold mb-2">
-                  {profileData.firstName} {profileData.lastName}
+                  {profile.firstName || profile.lastName ? `${profile.firstName} ${profile.lastName}`.trim() : 'Your Name'}
                 </h2>
-                <p className="text-muted-foreground mb-4">{profileData.major}</p>
-                
+                <p className="text-muted-foreground mb-4">{profile.major || 'Add your major'}</p>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center justify-center space-x-2">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>{profileData.email}</span>
+                    <span>{profile.email || 'No email'}</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>{profileData.phone}</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{profileData.location}</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <GraduationCap className="h-4 w-4 text-muted-foreground" />
-                    <span>Class of {profileData.graduationYear}</span>
-                  </div>
+                  {profile.phone && (
+                    <div className="flex items-center justify-center space-x-2">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span>{profile.phone}</span>
+                    </div>
+                  )}
+                  {profile.graduationYear && (
+                    <div className="flex items-center justify-center space-x-2">
+                      <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                      <span>Class of {profile.graduationYear}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -145,54 +139,19 @@ const Profile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      value={profileData.firstName}
-                      onChange={(e) => handleInputChange('firstName', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
+                    <Input id="firstName" value={profile.firstName} onChange={(e) => handleInputChange('firstName', e.target.value)} disabled={!isEditing} className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      value={profileData.lastName}
-                      onChange={(e) => handleInputChange('lastName', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
+                    <Input id="lastName" value={profile.lastName} onChange={(e) => handleInputChange('lastName', e.target.value)} disabled={!isEditing} className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={profileData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
+                    <Input id="email" type="email" value={profile.email} onChange={(e) => handleInputChange('email', e.target.value)} disabled={!isEditing} className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone</Label>
-                    <Input
-                      id="phone"
-                      value={profileData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
-                  </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={profileData.location}
-                      onChange={(e) => handleInputChange('location', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
+                    <Input id="phone" value={profile.phone} onChange={(e) => handleInputChange('phone', e.target.value)} disabled={!isEditing} className="bg-background/50" />
                   </div>
                 </div>
               </div>
@@ -203,33 +162,19 @@ const Profile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="university">University</Label>
-                    <Input
-                      id="university"
-                      value={profileData.university}
-                      onChange={(e) => handleInputChange('university', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
+                    <Input id="university" value={profile.university} onChange={(e) => handleInputChange('university', e.target.value)} disabled={!isEditing} className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="major">Major</Label>
-                    <Input
-                      id="major"
-                      value={profileData.major}
-                      onChange={(e) => handleInputChange('major', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
+                    <Input id="major" value={profile.major} onChange={(e) => handleInputChange('major', e.target.value)} disabled={!isEditing} className="bg-background/50" />
                   </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="graduationYear">Expected Graduation Year</Label>
-                    <Input
-                      id="graduationYear"
-                      value={profileData.graduationYear}
-                      onChange={(e) => handleInputChange('graduationYear', e.target.value)}
-                      disabled={!isEditing}
-                      className="bg-background/50"
-                    />
+                  <div className="space-y-2">
+                    <Label htmlFor="graduationYear">Graduation Year</Label>
+                    <Input id="graduationYear" value={profile.graduationYear} onChange={(e) => handleInputChange('graduationYear', e.target.value)} disabled={!isEditing} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="gpa">GPA</Label>
+                    <Input id="gpa" value={profile.gpa} onChange={(e) => handleInputChange('gpa', e.target.value)} disabled={!isEditing} className="bg-background/50" />
                   </div>
                 </div>
               </div>
@@ -237,66 +182,31 @@ const Profile = () => {
               {/* Bio */}
               <div className="glass-card p-6 rounded-xl">
                 <h3 className="text-xl font-semibold mb-6">About Me</h3>
-                <Textarea
-                  value={profileData.bio}
-                  onChange={(e) => handleInputChange('bio', e.target.value)}
-                  disabled={!isEditing}
-                  className="bg-background/50 min-h-[120px]"
-                  placeholder="Tell employers about yourself, your interests, and career goals..."
-                />
+                <Textarea value={profile.bio} onChange={(e) => handleInputChange('bio', e.target.value)} disabled={!isEditing} className="bg-background/50 min-h-[120px]" placeholder="Tell employers about yourself..." />
               </div>
 
               {/* Skills */}
               <div className="glass-card p-6 rounded-xl">
                 <h3 className="text-xl font-semibold mb-6">Skills</h3>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {profileData.skills.map((skill, index) => (
-                    <Badge 
-                      key={index}
-                      variant="secondary" 
-                      className="bg-primary/10 text-primary flex items-center space-x-2 px-3 py-1"
-                    >
+                  {profile.skills.map((skill, index) => (
+                    <Badge key={index} variant="secondary" className="bg-primary/10 text-primary flex items-center space-x-2 px-3 py-1">
                       <span>{skill}</span>
                       {isEditing && (
-                        <button 
-                          onClick={() => removeSkill(skill)}
-                          className="hover:text-destructive transition-colors"
-                        >
+                        <button onClick={() => removeSkill(skill)} className="hover:text-destructive transition-colors">
                           <X className="h-3 w-3" />
                         </button>
                       )}
                     </Badge>
                   ))}
+                  {profile.skills.length === 0 && <p className="text-muted-foreground text-sm">No skills added yet.</p>}
                 </div>
-                
                 {isEditing && (
                   <div className="flex space-x-2">
-                    <Input
-                      placeholder="Add a skill..."
-                      value={profileData.newSkill}
-                      onChange={(e) => handleInputChange('newSkill', e.target.value)}
-                      className="bg-background/50"
-                      onKeyPress={(e) => e.key === 'Enter' && addSkill()}
-                    />
-                    <Button onClick={addSkill} size="icon" variant="outline">
-                      <Plus className="h-4 w-4" />
-                    </Button>
+                    <Input placeholder="Add a skill..." value={newSkill} onChange={(e) => setNewSkill(e.target.value)} className="bg-background/50" onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())} />
+                    <Button onClick={addSkill} size="icon" variant="outline"><Plus className="h-4 w-4" /></Button>
                   </div>
                 )}
-              </div>
-
-              {/* Resume Upload */}
-              <div className="glass-card p-6 rounded-xl">
-                <h3 className="text-xl font-semibold mb-6">Resume & Documents</h3>
-                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                  <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground mb-4">
-                    Upload your resume and other relevant documents
-                  </p>
-                  <Button variant="outline" disabled={!isEditing}>
-                    Choose Files
-                  </Button>
-                </div>
               </div>
             </div>
           </div>
