@@ -170,12 +170,12 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
                 </>
               ) : (
                 <div className="space-y-2">
-                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="ghost" className="w-full justify-start">
                       Log In
                     </Button>
                   </Link>
-                  <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="hero" className="w-full justify-start">
                       Sign Up
                     </Button>
