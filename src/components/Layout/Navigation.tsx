@@ -94,10 +94,10 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
               </>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link to="/login">
+                <Link to="/auth">
                   <Button variant="ghost">Log In</Button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/auth">
                   <Button variant="hero">Sign Up</Button>
                 </Link>
               </div>
@@ -170,12 +170,12 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
                 </>
               ) : (
                 <div className="space-y-2">
-                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="ghost" className="w-full justify-start">
                       Log In
                     </Button>
                   </Link>
-                  <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="hero" className="w-full justify-start">
                       Sign Up
                     </Button>
