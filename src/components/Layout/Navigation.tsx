@@ -94,10 +94,10 @@ const Navigation = ({ isAuthenticated = false, onLogout }: NavigationProps) => {
               </>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link to="/login">
+                <Link to="/auth">
                   <Button variant="ghost">Log In</Button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/auth">
                   <Button variant="hero">Sign Up</Button>
                 </Link>
               </div>
